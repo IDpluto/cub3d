@@ -277,24 +277,26 @@ void draw_wall(t_laser *laser, int color)
 	laser->graphic.y1 = laser->graphic.y0 + laser->graphic.wh - 1;
 	laser->graphic.y_start = max(0, laser->graphic.y0);
 	laser->graphic.y_end = min(S_Y - 1, laser->graphic.y1);
-	printf("TEST: %d - %d\n", laser->graphic.y_start, laser->graphic.y_end);
-	printf("TEST: %d - %d\n", laser->graphic.y0, laser->graphic.y1);
-	printf("TEST: %d - %d\n", laser->graphic.wh);
 	gr_yfind(laser, &laser->data, color);
 }
 
 void render(t_laser *laser, e_dirt wdir)
 {
 	mlx_clear_window(laser->data.mlx, laser->data.mlx_win);
+	laser->x = 0;
 	while(laser->x < S_X)
 	{
 		laser->wdist = cast_single_ray(laser);
 		printf("** ray %3d : dist %.2f\n", laser->x, laser->wdist);
 		laser->x++;
 		draw_wall(laser, wall_colors[wdir]);
-		mlx_put_image_to_window(laser->data.mlx, laser->data.mlx_win, laser->data.img, 0, 0);
 	}
 
+	mlx_put_image_to_window(laser->data.mlx, laser->data.mlx_win, laser->data.img, 0, 0);
+	mlx_destroy_image(laser->data.mlx, laser->data.img);
+	laser->data.img = mlx_new_image(laser->data.mlx, S_X, S_Y);
+	laser->data.addr = mlx_get_data_addr(laser->data.img, &laser->data.bits_per_pixel, &laser->data.line_length,
+								&laser->data.endian);
 }
 
 void player_rotate(t_laser *laser, double th)
@@ -361,6 +363,7 @@ int player_move(t_laser *laser, int keycode, double amt)
 int				key_press(int keycode, t_laser *laser)
 {
 	e_dirt wdir;
+
 	if (keycode < 0 || keycode == KEY_ESC)
 		exit(0);
 	if (keycode == KEY_LEFT || keycode == KEY_RIGHT)
@@ -370,7 +373,6 @@ int				key_press(int keycode, t_laser *laser)
 		else
 			laser->p_nsight = ROT_UNIT * -1;
 		player_rotate(laser, laser->p_nsight);
-
 		render(laser, wdir);
 	}
 	else if (keycode == KEY_W || keycode == KEY_A || keycode == KEY_S || keycode == KEY_D)
