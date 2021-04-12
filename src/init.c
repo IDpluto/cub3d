@@ -11,7 +11,6 @@ void init(t_laser *laser)
 	laser->ray = 0;
 	laser->w_x = 0;
 	laser->w_y = 0;
-	laser->fov_h = 0;
 	laser->fovh_2 = 0;
 	laser->angle_per_pixel = 0;
 	laser->graphic.wh = 0;
@@ -21,4 +20,5 @@ void init(t_laser *laser)
 	laser->graphic.y_end = 0;
 	laser->graphic.fov_h = 0;
 	laser->graphic.fov_v = 0;
+	laser->fov_h = deg2rad(FOV);
 }

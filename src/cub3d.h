@@ -7,13 +7,26 @@
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 
-#define	MAP_X	6
-#define	MAP_Y	5
-#define	EPS		(0.0001)
-#define	S_X		400
-#define	S_Y		250
-#define	FOV		60
-#define	WALL_H	1.0
+#define	MAP_X					28
+#define	MAP_Y					24
+#define	EPS						(1e-06)
+#define	S_X						1080
+#define	S_Y						720
+#define	FOV						60
+#define	WALL_H					1.0
+#define _2PI					6.28318530717958647692
+#define  MOVE_UNIT				0.1
+#define ROT_UNIT				0.003
+#define KEY_RIGHT				124
+#define KEY_LEFT				123
+# define X_EVENT_KEY_PRESS		2
+# define X_EVENT_KEY_release	3
+# define X_EVENT_KEY_EXIT		17
+# define KEY_ESC				53
+# define KEY_W					13
+# define KEY_A					0
+# define KEY_S					1
+# define KEY_D					2
 
 typedef struct s_graphic
 {
@@ -27,6 +40,8 @@ typedef struct s_graphic
 }				t_graphic;
 
 typedef struct	s_data {
+	void	*mlx;
+	void	*mlx_win;
 	void		*img;
 	char		*addr;
 	int			bits_per_pixel;
@@ -38,7 +53,7 @@ typedef struct s_laser
 {
 	int x;
 	int y;
-	int fov_h;
+	double fov_h;
 	int x_step;
 	int y_step;
 	int map_x;
@@ -50,6 +65,7 @@ typedef struct s_laser
 	double p_y;
 	//double p_th;
 	double p_sight;
+	double p_nsight;
 	double ray;
 	double w_x;
 	double w_y;
@@ -63,6 +79,7 @@ typedef struct s_laser
 	double g;
 	double dist_v;
 	double dist_h;
+	t_data data;
 	t_graphic graphic;
 }				t_laser;
 
@@ -78,14 +95,19 @@ int ch_mapx(t_laser *t_pos);
 int ch_mapy(t_laser *t_pos);
 double deg2rad(double d);
 double rad2deg(double d);
-int map_get_cell(t_laser *t_pos);
+int map_get_cell(int x, int y);
 //e_bool get_wall_intersection(t_laser *t_pos, e_dirt wdir);
 double cast_single_ray(t_laser *t_pos);
 void gr_yfind(t_laser *laser, t_data *img, int color);
-void draw_wall(t_laser *laser, t_data *img, int color);
+void draw_wall(t_laser *laser, int color);
 int get_wall_height(t_laser *laser);
 int min(int a, int b);
 int max(int a, int b);
+int player_move(t_laser *laser, int keycode, double amt);
+static int get_move_offset(double th, int keycode, double amt, double *pdx, double *pdy);
+int key_direction(int keycode, int key_d);
+void player_rotate(t_laser *laser, double th);
+
 
 enum {VERT, HORIZ};
 

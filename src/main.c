@@ -2,12 +2,30 @@
 
 static int map[MAP_X][MAP_Y]=
 {
-    {1,1,1,1,1}, /* [0][*] */
-    {1,0,0,0,1}, /* [1][*] */
-    {1,0,0,0,1}, /* [2][*] */
-    {1,1,0,0,1}, /* and so on... */
-    {1,1,0,0,1},
-    {1,1,1,1,1}
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,2,1,1,1,1,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,3,0,0,0,3,0,0,0,1},
+  {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 int is_zero(double d)
@@ -91,11 +109,11 @@ int ch_mapy(t_laser *laser)
 		return ((int)laser->n_y - 1);
 }
 
-int map_get_cell(t_laser *laser)
+int map_get_cell(int x, int y)
 {
-	if (laser->map_x >= 0 && laser->map_x < MAP_X &&
-		laser->map_y >= 0 && laser->map_y < MAP_Y)
-    	return (map[laser->map_x][laser->map_y]);
+	if (x >= 0 && x < MAP_X &&
+		y >= 0 && y < MAP_Y)
+    	return (map[x][y]);
 	else
 		return (-1);
 }
@@ -144,12 +162,12 @@ e_bool get_wall_intersection(t_laser *laser, e_dirt *wdir)
 		}
 		else
 		{
-			laser->map_x = (int) laser->g;
+			laser->map_x = (int)laser->g;
 			laser->map_y = ch_mapy(laser);
 			laser->hit_side = HORIZ;
 			printf(" H(%.2f, %d) ->", laser->g, laser->map_y);
 		}
-		laser->cell = map_get_cell(laser);
+		laser->cell = map_get_cell(laser->map_x, laser->map_y);
 		if(laser->cell < 0 ) //out of map;
 			break;
 		if(laser->cell == 1 )
@@ -188,8 +206,8 @@ double cast_single_ray(t_laser *laser)
 {
 	e_dirt wdir;
 
-	laser->fov_h = deg2rad(FOV);
- 	laser->angle_per_pixel = laser->fov_h/ (S_X - 1.);
+
+	laser->angle_per_pixel = laser->fov_h / (S_X - 1.);
 	 //printf("TEST: %lf\n", laser->angle_per_pixel);
 	laser->fovh_2 = laser->fov_h / 2.0;
 	laser->ray = (laser->p_sight + laser->fovh_2) - (laser->x * laser->angle_per_pixel);
@@ -199,6 +217,7 @@ double cast_single_ray(t_laser *laser)
 	laser->wdist *= cos(laser->p_sight - laser->ray);
 	return (laser->wdist);
 }
+
 static int wall_colors[] = {    /* DIR_N, E, W, S */
 		0x00ccaaaa, 0x00aaccaa, 0x00aaaacc, 0x00bbbbbb
 };
@@ -213,11 +232,8 @@ void		my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 double fov_v(t_laser *laser)
 {
-	return (laser->graphic.fov_h * (double)S_Y/(double)S_X);
+	return (laser->fov_h * (double)S_Y/(double)S_X);
 }
-
-
-
 
 int get_wall_height(t_laser *laser)
 {
@@ -226,13 +242,15 @@ int get_wall_height(t_laser *laser)
 	return ((int)(S_Y * (WALL_H / laser->graphic.fov_h)));
 
 }
+
 void gr_yfind(t_laser *laser, t_data *img, int color)
 {
 	int i;
 	i = laser->graphic.y_start;
 	while (i < laser->graphic.y_end)
 	{
-		my_mlx_pixel_put(img, laser->x, i, color);
+		int temp = 0x00ff0000;
+		my_mlx_pixel_put(img, laser->x, i, temp++);
 		i++;
 	}
 }
@@ -252,43 +270,136 @@ int min(int a, int b)
 		return (b);
 }
 
-void draw_wall(t_laser *laser, t_data *img, int color)
+void draw_wall(t_laser *laser, int color)
 {
 	laser->graphic.wh = get_wall_height(laser);
 	laser->graphic.y0 = (int)((S_Y - laser->graphic.wh) / 2.0);
 	laser->graphic.y1 = laser->graphic.y0 + laser->graphic.wh - 1;
 	laser->graphic.y_start = max(0, laser->graphic.y0);
 	laser->graphic.y_end = min(S_Y - 1, laser->graphic.y1);
-	gr_yfind(laser, img, color);
+	printf("TEST: %d - %d\n", laser->graphic.y_start, laser->graphic.y_end);
+	printf("TEST: %d - %d\n", laser->graphic.y0, laser->graphic.y1);
+	printf("TEST: %d - %d\n", laser->graphic.wh);
+	gr_yfind(laser, &laser->data, color);
 }
 
-int main()
+void render(t_laser *laser, e_dirt wdir)
 {
-	t_laser *laser;
-	t_data  img;
-	e_dirt wdir;
-	void	*mlx;
-	void	*mlx_win;
-
-	if (!(laser = malloc(sizeof(t_laser))))
-		return (0);
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1080, 720, "Hello world!");
-	img.img = mlx_new_image(mlx, 400, 250);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	init(laser);
-	laser->p_x = 1.5;
-	laser->p_y = 3.5;
-	laser->p_sight = 355;
+	mlx_clear_window(laser->data.mlx, laser->data.mlx_win);
 	while(laser->x < S_X)
 	{
 		laser->wdist = cast_single_ray(laser);
 		printf("** ray %3d : dist %.2f\n", laser->x, laser->wdist);
 		laser->x++;
-		draw_wall(laser, &img, wall_colors[wdir]);
+		draw_wall(laser, wall_colors[wdir]);
+		mlx_put_image_to_window(laser->data.mlx, laser->data.mlx_win, laser->data.img, 0, 0);
 	}
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-    mlx_loop(mlx);
+
+}
+
+void player_rotate(t_laser *laser, double th)
+{
+	laser->p_sight += th;
+	if (laser->p_sight < 0)
+		laser->p_sight += _2PI;
+	else if (laser->p_sight > _2PI)
+		laser->p_sight -= _2PI;
+}
+
+int key_direction(int keycode, int key)
+{
+	if (keycode == key)
+		return (1);
+	else
+		return (-1);
+}
+
+static int get_move_offset(double th, int keycode, double amt, double *pdx, double *pdy)
+{
+	if (keycode == KEY_W || keycode == KEY_S)
+	{
+		*pdx = key_direction(keycode, KEY_W) * amt * cos(th);
+		*pdy = key_direction(keycode, KEY_W) * amt * sin(th);
+	}
+	else if (keycode == KEY_A || keycode == KEY_D)
+	{
+		*pdx = amt * cos(th + key_direction(keycode, KEY_A) * M_PI_2);
+		*pdy = amt * sin(th + key_direction(keycode, KEY_A) * M_PI_2);
+	}
+	else
+		return (-1);
+	return (0);
+}
+
+
+int player_move(t_laser *laser, int keycode, double amt)
+{
+	double d_x;
+	double d_y;
+	double n_x;
+	double n_y;
+
+	d_x = 0;
+	d_y = 0;
+	if (get_move_offset(laser->p_sight, keycode, amt, &d_x, &d_y) < 0 )
+	{
+		fprintf(stderr,"player_move: invalid key %d\n", keycode);
+		return (-1);
+	}
+	n_x = laser->p_x + d_x;
+	n_y = laser->p_y + d_y;
+	if (map_get_cell((int)n_x, (int)n_y) == -1)
+	{
+		printf("** bump !\n");
+		return (-1);
+	}
+	laser->p_x = n_x;
+	laser->p_y = n_y;
+	return (0);
+}
+
+int				key_press(int keycode, t_laser *laser)
+{
+	e_dirt wdir;
+	if (keycode < 0 || keycode == KEY_ESC)
+		exit(0);
+	if (keycode == KEY_LEFT || keycode == KEY_RIGHT)
+	{
+		if (keycode == KEY_LEFT)
+			laser->p_nsight = ROT_UNIT * 1;
+		else
+			laser->p_nsight = ROT_UNIT * -1;
+		player_rotate(laser, laser->p_nsight);
+
+		render(laser, wdir);
+	}
+	else if (keycode == KEY_W || keycode == KEY_A || keycode == KEY_S || keycode == KEY_D)
+	{
+		if (player_move(laser, keycode, MOVE_UNIT) == 0)
+			 render(laser,wdir);
+	}
+	return (0);
+}
+
+int main()
+{
+	t_laser *laser;
+	e_dirt wdir;
+
+
+	if (!(laser = malloc(sizeof(t_laser))))
+		return (0);
+	laser->data.mlx = mlx_init();
+	laser->data.mlx_win = mlx_new_window(laser->data.mlx, S_X, S_Y, "Hello world!");
+	laser->data.img = mlx_new_image(laser->data.mlx, S_X, S_Y);
+	laser->data.addr = mlx_get_data_addr(laser->data.img, &laser->data.bits_per_pixel, &laser->data.line_length,
+								&laser->data.endian);
+	init(laser);
+	laser->p_x = 12;
+	laser->p_y = 12;
+	laser->p_sight = 255;
+	render(laser, wdir);
+	mlx_hook(laser->data.mlx_win, X_EVENT_KEY_PRESS, 0, key_press, laser);
+    mlx_loop(laser->data.mlx);
 	return (0);
 }
