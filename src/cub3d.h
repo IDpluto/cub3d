@@ -16,7 +16,7 @@
 #define	WALL_H					1.0
 #define _2PI					6.28318530717958647692
 #define  MOVE_UNIT				0.1
-#define ROT_UNIT				0.003
+#define ROT_UNIT				0.1
 #define KEY_RIGHT				124
 #define KEY_LEFT				123
 # define X_EVENT_KEY_PRESS		2
@@ -27,6 +27,8 @@
 # define KEY_A					0
 # define KEY_S					1
 # define KEY_D					2
+
+typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
 
 typedef struct s_graphic
 {
@@ -81,6 +83,7 @@ typedef struct s_laser
 	double dist_h;
 	t_data data;
 	t_graphic graphic;
+	e_dirt wdir;
 }				t_laser;
 
 int is_zero(double d);
@@ -112,6 +115,6 @@ void player_rotate(t_laser *laser, double th);
 enum {VERT, HORIZ};
 
 typedef enum {false = 0, true = 1} e_bool;
-typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
+
 
 #endif

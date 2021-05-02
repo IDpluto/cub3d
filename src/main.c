@@ -215,6 +215,7 @@ double cast_single_ray(t_laser *laser)
 		return (INFINITY);
 	laser->wdist = l2dist(laser->p_x, laser->p_y, laser->w_x, laser->w_y);
 	laser->wdist *= cos(laser->p_sight - laser->ray);
+	laser->wdir = wdir;
 	return (laser->wdist);
 }
 
@@ -249,8 +250,7 @@ void gr_yfind(t_laser *laser, t_data *img, int color)
 	i = laser->graphic.y_start;
 	while (i < laser->graphic.y_end)
 	{
-		int temp = 0x00ff0000;
-		my_mlx_pixel_put(img, laser->x, i, temp++);
+		my_mlx_pixel_put(img, laser->x, i, color);
 		i++;
 	}
 }
@@ -277,23 +277,26 @@ void draw_wall(t_laser *laser, int color)
 	laser->graphic.y1 = laser->graphic.y0 + laser->graphic.wh - 1;
 	laser->graphic.y_start = max(0, laser->graphic.y0);
 	laser->graphic.y_end = min(S_Y - 1, laser->graphic.y1);
-	printf("TEST: %d - %d\n", laser->graphic.y_start, laser->graphic.y_end);
-	printf("TEST: %d - %d\n", laser->graphic.y0, laser->graphic.y1);
-	printf("TEST: %d - %d\n", laser->graphic.wh);
 	gr_yfind(laser, &laser->data, color);
 }
 
-void render(t_laser *laser, e_dirt wdir)
+void render(t_laser *laser)
 {
 	mlx_clear_window(laser->data.mlx, laser->data.mlx_win);
+	laser->x = 0;
 	while(laser->x < S_X)
 	{
 		laser->wdist = cast_single_ray(laser);
 		printf("** ray %3d : dist %.2f\n", laser->x, laser->wdist);
 		laser->x++;
-		draw_wall(laser, wall_colors[wdir]);
-		mlx_put_image_to_window(laser->data.mlx, laser->data.mlx_win, laser->data.img, 0, 0);
+		draw_wall(laser, wall_colors[laser->wdir]);
 	}
+	mlx_put_image_to_window(laser->data.mlx, laser->data.mlx_win, laser->data.img, 0, 0);
+	mlx_destroy_image(laser->data.mlx, laser->data.img);
+	laser->data.img = mlx_new_image(laser->data.mlx, S_X, S_Y);
+	laser->data.addr = mlx_get_data_addr(laser->data.img, &laser->data.bits_per_pixel, &laser->data.line_length,
+								&laser->data.endian);
+
 
 }
 
@@ -371,12 +374,12 @@ int				key_press(int keycode, t_laser *laser)
 			laser->p_nsight = ROT_UNIT * -1;
 		player_rotate(laser, laser->p_nsight);
 
-		render(laser, wdir);
+		render(laser);
 	}
 	else if (keycode == KEY_W || keycode == KEY_A || keycode == KEY_S || keycode == KEY_D)
 	{
 		if (player_move(laser, keycode, MOVE_UNIT) == 0)
-			 render(laser,wdir);
+			 render(laser);
 	}
 	return (0);
 }
@@ -384,7 +387,6 @@ int				key_press(int keycode, t_laser *laser)
 int main()
 {
 	t_laser *laser;
-	e_dirt wdir;
 
 
 	if (!(laser = malloc(sizeof(t_laser))))
@@ -398,7 +400,7 @@ int main()
 	laser->p_x = 12;
 	laser->p_y = 12;
 	laser->p_sight = 255;
-	render(laser, wdir);
+	render(laser);
 	mlx_hook(laser->data.mlx_win, X_EVENT_KEY_PRESS, 0, key_press, laser);
     mlx_loop(laser->data.mlx);
 	return (0);
