@@ -30,6 +30,10 @@
 
 typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
 
+typedef struct {
+    double txratio;
+} t_image;
+
 typedef struct s_graphic
 {
 	int wh;
@@ -44,6 +48,7 @@ typedef struct s_graphic
 typedef struct	s_data {
 	void	*mlx;
 	void	*mlx_win;
+	void	*ptr;
 	void		*img;
 	char		*addr;
 	int			bits_per_pixel;
@@ -84,6 +89,7 @@ typedef struct s_laser
 	t_data data;
 	t_graphic graphic;
 	e_dirt wdir;
+	t_image image;
 }				t_laser;
 
 int is_zero(double d);
@@ -102,6 +108,7 @@ int map_get_cell(int x, int y);
 //e_bool get_wall_intersection(t_laser *t_pos, e_dirt wdir);
 double cast_single_ray(t_laser *t_pos);
 void gr_yfind(t_laser *laser, t_data *img, int color);
+void get_txratio(t_laser *laser);
 void draw_wall(t_laser *laser, int color);
 int get_wall_height(t_laser *laser);
 int min(int a, int b);
