@@ -3,9 +3,9 @@
 
 double cast_single_ray(t_game *game)
 {
-	game->laser.angle_per_pixel = game->laser.fov_h / (S_X - 1.);
-	game->laser.fovh_2 = game->laser.fov_h / 2.0;
-	game->laser.ray = (game->laser.p_sight + game->laser.fovh_2) - (game->laser.x * game->laser.angle_per_pixel);
+	game->global.angle_per_pixel = game->global.fov_h / (S_X - 1.);
+	game->global.fovh_2 = game->global.fov_h / 2.0;
+	game->laser.ray = (game->laser.p_sight + game->global.fovh_2) - (game->laser.x * game->global.angle_per_pixel);
 	if (get_wall_intersection(game) == false)
 		return (INFINITY);
 	game->laser.wdist = l2dist(game->laser.p_x, game->laser.p_y, game->laser.w_x, game->laser.w_y);

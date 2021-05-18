@@ -65,8 +65,8 @@ double round_step(int xy_step, double p_xy)
 
 void wall_dist(t_game *game)
 {
-	game->laser.dist_v = l2dist(game->laser.p_x, game->laser.p_y, game->laser.n_x, game->laser.f);
-	game->laser.dist_h = l2dist(game->laser.p_x, game->laser.p_y, game->laser.g, game->laser.n_y);
+	game->laser.dist_v = l2dist(game->player.x, game->player.y, game->laser.n_x, game->laser.f);
+	game->laser.dist_h = l2dist(game->player.x, game->player.y, game->laser.g, game->laser.n_y);
 	if (game->laser.dist_v < game->laser.dist_h)
 	{
 		game->laser.map_x = ch_mapx(game);

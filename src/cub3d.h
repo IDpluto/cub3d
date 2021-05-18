@@ -28,6 +28,33 @@
 # define KEY_S					1
 # define KEY_D					2
 
+typedef struct s_global
+{
+	double fov_h;
+	double fovh_2;
+	double fov_v;
+	double angle_per_pixel;
+}	t_global;
+
+typedef struct s_player
+{
+	double x;
+	double y;
+	double p_sight;
+	double p_nsight;
+} t_player;
+
+typedef struct s_graphic
+{
+	int wh;
+	int y0;
+	int y1;
+	int y_start;
+	int y_end;
+	double fov_v;
+	double fov_h;
+}				t_graphic;
+
 typedef struct	s_data {
 	void		*mlx;
 	void		*mlx_win;
@@ -49,16 +76,9 @@ typedef struct s_laser
 	int map_y;
 	int hit_side;
 	int cell;
-	double p_x;
-	double p_y;
 	double w_x;
 	double w_y;
 	double ray;
-	double fov_h;
-	double fovh_2;
-	double p_sight;
-	double p_nsight;
-	double angle_per_pixel;
 	double wdist;
 	double x_slope;
 	double y_slope;
@@ -75,6 +95,9 @@ typedef struct s_game
 	t_data data;
 	e_dirt wdir;
 	t_laser laser;
+	t_global global;
+	t_graphic graphic;
+	t_player player;
 }			t_game;
 
 double		ch_xslope(t_game *game);
@@ -87,6 +110,7 @@ double		l2dist(double x0, double y0, double x1, double y1);
 double		round_step(int xy_step, double p_xy);
 double		cast_single_ray(t_game *game);
 void		wall_hit_grid(t_game *game);
+int			 key_press(int keycode, t_game *game);
 
 
 

@@ -11,9 +11,9 @@ int main()
 	game->data.addr = mlx_get_data_addr(game->data.img, &game->data.bits_per_pixel, &game->data.line_length,
 								&game->data.endian);
 	init(game);
-	game->laser.p_x = 12;
-	game->laser.p_y = 12;
-	game->laser.p_sight = 255;
+	game->player.x = 12;
+	game->player.y = 12;
+	game->player.p_sight = 255;
 	render(game);
 	mlx_hook(game->data.mlx_win, X_EVENT_KEY_PRESS, 0, key_press, game);
 	mlx_loop(game->data.mlx);
