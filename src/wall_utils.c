@@ -16,19 +16,12 @@ double ch_yslope(t_game *game)
 		return(1./tan(game->laser.ray));
 }
 
-int ch_mapx(t_laser *laser)
+int ch_map(int step, double n)
 {
-    if (laser->x_step == 1)
-        return ((int)laser->n_x);
-    else
-        return ((int)laser->n_x - 1);
-}
-int ch_mapy(t_laser *laser)
-{
-    if (laser->y_step == 1)
-        return ((int)laser->n_y);
-    else
-        return ((int)laser->n_y - 1);
+	if (step == 1)
+		return ((int)n);
+	else
+		return ((int)n - 1);
 }
 
 void find_direction(t_game *game)
@@ -55,12 +48,12 @@ void find_direction(t_game *game)
 
 double round_step(int xy_step, double p_xy)
 {
-    if (xy_step > 0)
-        return (floor(p_xy) + 1); //내림
-    else if (xy_step < 0)
-        return (ceil(p_xy) - 1); //올림
-    else
-        return (p_xy);
+	if (xy_step > 0)
+		return (floor(p_xy) + 1); //내림
+	else if (xy_step < 0)
+		return (ceil(p_xy) - 1); //올림
+	else
+		return (p_xy);
 }
 
 void wall_dist(t_game *game)
@@ -69,14 +62,14 @@ void wall_dist(t_game *game)
 	game->laser.dist_h = l2dist(game->player.x, game->player.y, game->laser.g, game->laser.n_y);
 	if (game->laser.dist_v < game->laser.dist_h)
 	{
-		game->laser.map_x = ch_mapx(game);
+		game->laser.map_x = ch_map(game->laser.x_step, game->laser.n_x);
 		game->laser.map_y = (int)game->laser.f;
 		game->laser.hit_side = VERT;
 	}
 	else
 	{
 		game->laser.map_x = (int)game->laser.g;
-		game->laser.map_y = ch_mapy(game);
+		game->laser.map_y = ch_map(game->laser.y_step, game->laser.n_y);
 		game->laser.hit_side = HORIZ;
 	}
 }

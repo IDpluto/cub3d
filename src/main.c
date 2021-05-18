@@ -5,6 +5,8 @@ int main()
 	t_game *game;
 	if (!(game = malloc(sizeof(t_game))))
 		return (0);
+	if (parsing_cub(&game.map, fd) == -1)
+		return (0);
 	game->data.mlx = mlx_init();
 	game->data.mlx_win = mlx_new_window(game->data.mlx, S_X, S_Y, "Hello world!");
 	game->data.img = mlx_new_image(game->data.mlx, S_X, S_Y);

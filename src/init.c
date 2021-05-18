@@ -1,5 +1,14 @@
 #include "cub3d.h"
 
+
+void init(t_game *game)
+{
+
+}
+
+
+
+
 void gwi_init(t_game *game)
 {
 	game->laser.x_step = num_sign(cos(game->laser.ray));
