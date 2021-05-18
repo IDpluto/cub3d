@@ -28,27 +28,10 @@
 # define KEY_S					1
 # define KEY_D					2
 
-typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
-
-typedef struct {
-    double txratio;
-} t_image;
-
-typedef struct s_graphic
-{
-	int wh;
-	int y0;
-	int y1;
-	int y_start;
-	int y_end;
-	double fov_v;
-	double fov_h;
-}				t_graphic;
-
 typedef struct	s_data {
-	void	*mlx;
-	void	*mlx_win;
-	void	*ptr;
+	void		*mlx;
+	void		*mlx_win;
+	void		*ptx;
 	void		*img;
 	char		*addr;
 	int			bits_per_pixel;
@@ -60,24 +43,23 @@ typedef struct s_laser
 {
 	int x;
 	int y;
-	double fov_h;
 	int x_step;
 	int y_step;
 	int map_x;
 	int map_y;
 	int hit_side;
 	int cell;
-	double wdist;
 	double p_x;
 	double p_y;
-	//double p_th;
-	double p_sight;
-	double p_nsight;
-	double ray;
 	double w_x;
 	double w_y;
+	double ray;
+	double fov_h;
 	double fovh_2;
+	double p_sight;
+	double p_nsight;
 	double angle_per_pixel;
+	double wdist;
 	double x_slope;
 	double y_slope;
 	double n_x;
@@ -86,42 +68,32 @@ typedef struct s_laser
 	double g;
 	double dist_v;
 	double dist_h;
+}	t_laser;
+
+typedef struct s_game
+{
 	t_data data;
-	t_graphic graphic;
 	e_dirt wdir;
-	t_image image;
-}				t_laser;
+	t_laser laser;
+}			t_game;
 
-int is_zero(double d);
-int num_sign(double d);
-double l2dist(double x0, double y0, double x1, double y1);
-void init(t_laser *pos);
-double ch_xslope(t_laser *t_pos);
-double ch_yslope(t_laser *t_pos);
-double ch_nx(int x_step, double p_x);
-double ch_ny(int y_step, double p_y);
-int ch_mapx(t_laser *t_pos);
-int ch_mapy(t_laser *t_pos);
-double deg2rad(double d);
-double rad2deg(double d);
-int map_get_cell(int x, int y);
-//e_bool get_wall_intersection(t_laser *t_pos, e_dirt wdir);
-double cast_single_ray(t_laser *t_pos);
-void gr_yfind(t_laser *laser, t_data *img, int color);
-void get_txratio(t_laser *laser);
-void draw_wall(t_laser *laser, int color);
-int get_wall_height(t_laser *laser);
-int min(int a, int b);
-int max(int a, int b);
-int player_move(t_laser *laser, int keycode, double amt);
-static int get_move_offset(double th, int keycode, double amt, double *pdx, double *pdy);
-int key_direction(int keycode, int key_d);
-void player_rotate(t_laser *laser, double th);
+double		ch_xslope(t_game *game);
+double		ch_yslope(t_game *game);
+void		find_direction(t_game *game);
+void		wall_dist(t_game *game);
+int			is_zero(double d);
+int			num_sign(double d);
+double		l2dist(double x0, double y0, double x1, double y1);
+double		round_step(int xy_step, double p_xy);
+double		cast_single_ray(t_game *game);
+void		wall_hit_grid(t_game *game);
 
 
+
+
+typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
 enum {VERT, HORIZ};
 
 typedef enum {false = 0, true = 1} e_bool;
-
 
 #endif

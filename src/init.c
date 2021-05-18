@@ -1,24 +1,13 @@
 #include "cub3d.h"
 
-void init(t_laser *laser)
+void gwi_init(t_game *game)
 {
-	laser->x = 0;
-	laser->y = 0;
-	laser->wdist = 0;
-	laser->p_x = 0;
-	laser->p_y = 0;
-	laser->p_sight = 0;
-	laser->ray = 0;
-	laser->w_x = 0;
-	laser->w_y = 0;
-	laser->fovh_2 = 0;
-	laser->angle_per_pixel = 0;
-	laser->graphic.wh = 0;
-	laser->graphic.y0 = 0;
-	laser->graphic.y1 = 0;
-	laser->graphic.y_start = 0;
-	laser->graphic.y_end = 0;
-	laser->graphic.fov_h = 0;
-	laser->graphic.fov_v = 0;
-	laser->fov_h = deg2rad(FOV);
+	game->laser.x_step = num_sign(cos(game->laser.ray));
+	game->laser.y_step = num_sign(sin(game->laser.ray));
+	game->laser.x_slope = ch_xslope(game);
+	game->laser.y_slope = ch_yslope(game);
+	game->laser.n_x = round_step(game->laser.x_step, game->laser.p_x);
+	game->laser.n_y = round_step(game->laser.y_step, game->laser.p_y);
+	game->laser.f = INFINITY;
+	game->laser.g = INFINITY;
 }
