@@ -15,6 +15,7 @@ void draw_wall(t_game *game)
 	game->graphic.y_start = max(0, game->graphic.y0);
 	game->graphic.y_end = min(game->map.resolution[1] - 1, game->graphic.y1);
 	gr_yfind(game, game->tex.tex[game->wdir]);
+	floor_ceil(game);
 }
 // ~~~ , int *tex
 void gr_yfind(t_game *game, int *tex)
@@ -30,7 +31,6 @@ void gr_yfind(t_game *game, int *tex)
 	tx = (int)(game->tex.txratio * game->data.width);
 	//printf("TEST======%d\n",game->data.width);
 	y = game->graphic.y_start;
-
 	while (y < game->graphic.y_end)
 	{
 		ty = (int)((double)(y - game->graphic.y0) * game->data.height / game->graphic.wh);
@@ -39,6 +39,29 @@ void gr_yfind(t_game *game, int *tex)
 		y++;
 	}
 }
+
+void floor_ceil(t_game *game)
+{
+	int y;
+	double h;
+	double d;
+	double ec;
+
+	if (game->graphic.y1 < game->map.resolution[1] -1)
+	{
+		ec = get_fov_min_dist(game);
+		y = game->graphic.y1 + 1;
+		while (y < game->map.resolution[1])
+		{
+			h = (double)(game->map.resolution[1] - 1 - y)/game->map.resolution[1];
+			d = ec / (1. - 2 * h);
+			my_mlx_pixel_put(&game->data, game->laser.x, y, game->map.floor);
+			my_mlx_pixel_put(&game->data, game->laser.x, (game->map.resolution[1] - 1 - y), game->map.celling);
+			y++;
+		}
+	}
+}
+
 
 void get_txratio(t_game *game)
 {

@@ -218,4 +218,6 @@ void init_map(t_game *game);
 void gwi_init(t_game *game);
 double deg2rad(double d);
 int map_get_cell(int x, int y, t_map *map);
+double get_fov_min_dist(t_game *game);
+void floor_ceil(t_game *game);
 #endif

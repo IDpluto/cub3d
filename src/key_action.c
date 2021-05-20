@@ -19,7 +19,6 @@ int			 key_press(int keycode, t_game *game)
 		if (player_move(game, keycode, MOVE_UNIT) == 0)
 			 render(game);
 	}
-	printf("TEST:%f\n",game->player.p_sight);
 	return (0);
 }
 
