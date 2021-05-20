@@ -5,14 +5,20 @@ SRCS =	src/init.c\
 		src/graphic_math.c\
 		src/graphic.c\
 		src/key_action.c\
-		src/map.c\
 		src/my_math.c\
 		src/my_math2.c\
 		src/my_mlx.c\
 		src/player_action.c\
 		src/wall_find.c\
-		gnl/get_next_line_utils.c \
-		src/wall_utils.c
+		gnl/get_next_line.c\
+		gnl/get_next_line_utils.c\
+		src/wall_utils.c\
+		src/utils.c\
+		src/map_parsing.c\
+		src/node.c\
+		src/texture.c\
+		src/color.c\
+		src/error.c
 
 
 NAME = Cub3D

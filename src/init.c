@@ -1,13 +1,34 @@
 #include "cub3d.h"
 
 
-void init(t_game *game)
+void init_game(t_game *game)
 {
-
+	init_mlx(game);
 }
 
+void			init_data(t_game *game)
+{
+	game->data.img = mlx_new_image(game->data.mlx, game->map.resolution[0],game->map.resolution[1]);
+	game->data.addr = (int*)mlx_get_data_addr(game->data.img, &game->data.bits_per_pixel ,&game->data.line_length, &game->data.endian);
+}
 
+void			init_mlx(t_game *game)
+{
+	game->data.mlx = mlx_init();
+	game->data.mlx_win = mlx_new_window(game->data.mlx, game->map.resolution[0], game->map.resolution[1], "title");
+}
 
+void init_map(t_game *game)
+{
+	game->map.map = NULL;
+	game->map.textures[0] = NULL;
+	game->map.textures[1] = NULL;
+	game->map.textures[2] = NULL;
+	game->map.textures[3] = NULL;
+	game->map.textures[4] = NULL;
+	game->map.floor = 0;
+	game->map.celling = 0;
+}
 
 void gwi_init(t_game *game)
 {

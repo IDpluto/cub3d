@@ -41,8 +41,9 @@ void find_direction(t_game *game)
 			game->wdir = DIR_S;
 		else
 			game->wdir = DIR_N;
-	game->laser.w_x = game->laser.g;
-	game->laser.w_y = game->laser.n_y;
+		game->laser.w_x = game->laser.g;
+		game->laser.w_y = game->laser.n_y;
+
 	}
 }
 

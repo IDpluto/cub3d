@@ -25,11 +25,11 @@ int player_move(t_game *game, int keycode, double amt)
 	}
 	n_x = game->player.x + d_x;
 	n_y = game->player.y + d_y;
-	if (map_get_cell((int)n_x, (int)n_y) == -1)
-	{
-		printf("** bump !\n");
-		return (-1);
-	}
+	if (map_get_cell((int)n_x, (int)n_y, &game->map) == 1)
+    {
+        printf("** bump !\n");
+        return (-1);
+    }
 	game->player.x = n_x;
 	game->player.y = n_y;
 	return (0);

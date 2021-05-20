@@ -28,11 +28,6 @@ double l2dist(double x0, double y0, double x1, double y1)
 	return sqrt(dx * dx + dy* dy);
 }
 
-double deg2rad(double d)
-{
-    d *= M_PI/180.0;
-    return (d);
-}
 
 double rad2deg(double d)
 {
