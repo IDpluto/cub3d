@@ -6,12 +6,6 @@ int		parsing_cub(t_map *map, int fd)
 	int		check;
 
 	check = 0;
-
-	map->textures[0] = NULL;
-	map->textures[1] = NULL;
-	map->textures[2] = NULL;
-	map->textures[3] = NULL;
-	map->textures[4] = NULL;
 	while (get_next_line(fd, &line))
 	{
 		check += put_in_texture(map, line);

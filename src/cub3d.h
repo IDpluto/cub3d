@@ -43,6 +43,9 @@
 # define F 6
 # define C 7
 
+
+
+
 typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
 enum {VERT, HORIZ};
 typedef enum {false = 0, true = 1} e_bool;
@@ -54,6 +57,13 @@ typedef struct s_global
 	double fov_v;
 	double angle_per_pixel;
 }	t_global;
+
+typedef struct {
+    int tex;
+    int x, y;
+    double dist;
+    double th;
+} sprite_t;
 
 typedef struct s_texture
 {
@@ -153,6 +163,7 @@ typedef struct s_game
 	t_player	player;
 	t_map		map;
 	t_texture	tex;
+	sprite_t	sprite;
 }			t_game;
 
 double		ch_xslope(t_game *game);

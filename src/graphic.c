@@ -47,9 +47,9 @@ void floor_ceil(t_game *game)
 	double d;
 	double ec;
 
-	if (game->graphic.y1 < game->map.resolution[1] -1)
+	if (game->graphic.y1 < game->map.resolution[1] - 1)
 	{
-		ec = get_fov_min_dist(game);
+		ec = WALL_H / (2.0 * tan(game->global.fov_v / 2.0));
 		y = game->graphic.y1 + 1;
 		while (y < game->map.resolution[1])
 		{
@@ -73,17 +73,19 @@ void get_txratio(t_game *game)
 
 void render(t_game *game)
 {
-	mlx_clear_window(game->data.mlx, game->data.mlx_win);
+	double zbuf[game->map.resolution[0]];
 
+	mlx_clear_window(game->data.mlx, game->data.mlx_win);
 	game->global.fov_h = global_fov_h(game);
 	game->laser.x = 0;
 	while(game->laser.x < game->map.resolution[0])
 	{
 		game->laser.wdist = cast_single_ray(game);
-		//printf("** ray %3d : dist %.2f\n", game->laser.x, game->laser.wdist);
+		zbuf[game->laser.x] = game->laser.wdist;
 		game->laser.x++;
 		draw_wall(game);
 	}
+	draw_sprites(game);
 	mlx_put_image_to_window(game->data.mlx, game->data.mlx_win, game->data.img, 0, 0);
 	mlx_destroy_image(game->data.mlx, game->data.img);
 	game->data.img = mlx_new_image(game->data.mlx, game->map.resolution[0], game->map.resolution[1]);
