@@ -18,7 +18,8 @@ SRCS =	src/init.c\
 		src/node.c\
 		src/texture.c\
 		src/color.c\
-		src/error.c
+		src/error.c\
+		src/sprites.c
 
 
 NAME = Cub3D

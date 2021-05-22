@@ -6,6 +6,12 @@ int		parsing_cub(t_map *map, int fd)
 	int		check;
 
 	check = 0;
+
+	map->textures[0] = NULL;
+	map->textures[1] = NULL;
+	map->textures[2] = NULL;
+	map->textures[3] = NULL;
+	map->textures[4] = NULL;
 	while (get_next_line(fd, &line))
 	{
 		check += put_in_texture(map, line);
@@ -208,6 +214,14 @@ int				ft_isspace(char line)
 
 int map_get_cell(int x, int y, t_map *map)
 {
-	return (map->map[y][x] - '0');
+	printf("TEST:%d\n", map->map[y][x] - '0');
+		return (map->map[y][x] - '0');
+}
+
+int sp_map_get_cell(int x, int y, t_map *map)
+{
+
+	return ((int)map->map[y][x] - '0');
+
 }
 

@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-int get_wall_height(t_game *game)
+int get_wall_height(t_game *game, double dist)
 {
 	game->global.fov_v = global_fov_v(game);
 	game->graphic.fov_h = 2.0 * game->laser.wdist * tan(game->global.fov_v / 2.0);
@@ -9,7 +9,7 @@ int get_wall_height(t_game *game)
 
 void draw_wall(t_game *game)
 {
-	game->graphic.wh = get_wall_height(game);
+	game->graphic.wh = get_wall_height(game, game->laser.wdist);
 	game->graphic.y0 = (int)((game->map.resolution[1] - game->graphic.wh) / 2.0);
 	game->graphic.y1 = game->graphic.y0 + game->graphic.wh - 1;
 	game->graphic.y_start = max(0, game->graphic.y0);
@@ -47,9 +47,9 @@ void floor_ceil(t_game *game)
 	double d;
 	double ec;
 
-	if (game->graphic.y1 < game->map.resolution[1] - 1)
+	if (game->graphic.y1 < game->map.resolution[1] -1)
 	{
-		ec = WALL_H / (2.0 * tan(game->global.fov_v / 2.0));
+		ec = get_fov_min_dist(game);
 		y = game->graphic.y1 + 1;
 		while (y < game->map.resolution[1])
 		{
@@ -73,19 +73,21 @@ void get_txratio(t_game *game)
 
 void render(t_game *game)
 {
-	double zbuf[game->map.resolution[0]];
-
 	mlx_clear_window(game->data.mlx, game->data.mlx_win);
+
 	game->global.fov_h = global_fov_h(game);
 	game->laser.x = 0;
+	double zbuff[game->map.resolution[0]];
+
 	while(game->laser.x < game->map.resolution[0])
 	{
 		game->laser.wdist = cast_single_ray(game);
-		zbuf[game->laser.x] = game->laser.wdist;
-		game->laser.x++;
+		//printf("** ray %3d : dist %.2f\n", game->laser.x, game->laser.wdist);
+		zbuff[game->laser.x] = game->laser.wdist;
 		draw_wall(game);
+		game->laser.x++;
 	}
-	draw_sprites(game);
+	draw_sprites(game,zbuff,game->tex.tex[S]);
 	mlx_put_image_to_window(game->data.mlx, game->data.mlx_win, game->data.img, 0, 0);
 	mlx_destroy_image(game->data.mlx, game->data.img);
 	game->data.img = mlx_new_image(game->data.mlx, game->map.resolution[0], game->map.resolution[1]);

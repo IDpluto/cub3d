@@ -13,8 +13,10 @@
 #define	EPS						(1e-06)
 #define	FOV						60
 #define	WALL_H					1.0
+#define CELL_WALL				1
 #define _2PI					6.28318530717958647692
-#define _PI					3.14159265358979323846
+#define _PI						3.14159265358979323846
+#define _PI_2					1.57079632679489661923
 #define  MOVE_UNIT				0.1
 #define ROT_UNIT				0.1
 #define KEY_RIGHT				124
@@ -43,9 +45,6 @@
 # define F 6
 # define C 7
 
-
-
-
 typedef enum {DIR_N = 0, DIR_E, DIR_W, DIR_S} e_dirt;
 enum {VERT, HORIZ};
 typedef enum {false = 0, true = 1} e_bool;
@@ -56,14 +55,28 @@ typedef struct s_global
 	double fovh_2;
 	double fov_v;
 	double angle_per_pixel;
+	double pixel_per_angle;
 }	t_global;
 
 typedef struct {
     int tex;
-    int x, y;
+    int x;
+	int y;
+	int i;
+	int j;
     double dist;
     double th;
-} sprite_t;
+	int cx;
+	int xmin;
+	int xmax;
+	double txratio;
+	int tx;
+	int ty;
+	int color;
+	int y0;
+	int sh;
+	double angle;
+} t_sprite;
 
 typedef struct s_texture
 {
@@ -163,7 +176,7 @@ typedef struct s_game
 	t_player	player;
 	t_map		map;
 	t_texture	tex;
-	sprite_t	sprite;
+	int 		**visible;
 }			t_game;
 
 double		ch_xslope(t_game *game);
@@ -172,7 +185,7 @@ int			ch_map(int step, double n);
 void		find_direction(t_game *game);
 void		wall_dist(t_game *game);
 void		wall_hit_grid(t_game *game);
-int			get_wall_height(t_game *game);
+int get_wall_height(t_game *game, double dist);
 void		draw_wall(t_game *game);
 void		render(t_game *game);
 void gr_yfind(t_game *game, int *tex);
@@ -231,4 +244,10 @@ double deg2rad(double d);
 int map_get_cell(int x, int y, t_map *map);
 double get_fov_min_dist(t_game *game);
 void floor_ceil(t_game *game);
+void			my_qsort(int data[], int start, int end);
+void put_sprite(t_sprite *sp, t_game *game, double *zbuff, int *tex);
+void	draw_sprites(t_game *game,double *zbuff, int *tex);
+t_sprite *get_visible_sprites(t_game *game, int *pcnt);
+int getPivot(int data[], int start, int end);
+int sp_map_get_cell(int x, int y, t_map *map);
 #endif
