@@ -19,11 +19,12 @@ SRCS =	src/init.c\
 		src/texture.c\
 		src/color.c\
 		src/error.c\
-		src/sprites.c
+		src/sprites.c\
+		src/map_check.c
 
 
 NAME = Cub3D
-GCC_FLAG = -g -fsanitize=address # -Wall -Werror -Wextra
+GCC_FLAG = -g -fsanitize=address  #-g -Wall -Werror -Wextra 
 CC = gcc $(GCC_FLAG)
 
 OBJS = $(SRCS:.c=.o)

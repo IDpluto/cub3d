@@ -4,6 +4,7 @@
 void init_game(t_game *game)
 {
 	init_mlx(game);
+	macro_init(game);
 }
 
 void			init_data(t_game *game)
@@ -28,6 +29,8 @@ void init_map(t_game *game)
 	game->map.textures[4] = NULL;
 	game->map.floor = 0;
 	game->map.celling = 0;
+	game->sx = game->map.resolution[0];
+	game->sy = game->map.resolution[1];
 }
 
 void gwi_init(t_game *game)
@@ -40,4 +43,11 @@ void gwi_init(t_game *game)
 	game->laser.n_y = round_step(game->laser.y_step, game->player.y);
 	game->laser.f = INFINITY;
 	game->laser.g = INFINITY;
+}
+
+void macro_init(t_game *game)
+{
+	game->global.fov_h = deg2rad(FOV);
+	game->global.pixel_per_angle =
+		(game->map.resolution[0] - 1.) / game->global.fov_h;
 }

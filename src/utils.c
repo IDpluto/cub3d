@@ -14,42 +14,41 @@ char			**free_all(char **line)
 	return (NULL);
 }
 
-void			my_qsort(int data[], int start, int end)
+void			my_qsort(t_sprite *sp, int start, int end)
 {
-	int pivot;
+	double pivot;
 
-	pivot = getPivot(data, start, end);
-
-	if(start < end)
+	if (start < end)
 	{
-		pivot = getPivot(data, start, end);
-		my_qsort(data, start, pivot - 1);
-		my_qsort(data, pivot + 1, end);
+		pivot = getPivot(sp, start, end);
+		my_qsort(sp, start, pivot - 1);
+		my_qsort(sp, pivot + 1, end);
 	}
 }
 
-int getPivot(int data[], int start, int end)
+int				getPivot(t_sprite *sp, int start, int end)
 {
 	int i;
 	int j;
-	int tmp;
-	int pivot;
+	t_sprite tmp;
+	double pivot;
 
-	pivot = data[end];
+	pivot = sp[end].dist;
 	i = start - 1;
 	j = start;
 
 	while (j < end)
 	{
-		if (data[j] <= pivot)
+		if (sp[j].dist <= pivot)
 		{
-			tmp = data[++i];
-			data[i] = data[j];
-			data[j] = tmp;
+			tmp = sp[++i];
+			sp[i] = sp[j];
+			sp[j] = tmp;
 		}
+		j++;
 	}
-	tmp = data[i + 1];
-	data[i + 1] = data[end];
-	data[end] = tmp;
+	tmp = sp[i + 1];
+	sp[i + 1] = sp[end];
+	sp[end] = tmp;
 	return (i + 1);
 }

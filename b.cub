@@ -1,0 +1,15 @@
+R 640 1080
+NO textures/wall_n.xpm
+SO textures/wall_s.xpm
+WE textures/wall_w.xpm
+EA textures/wall_e.xpm
+S textures/sp_2.xpm
+F 220,100,0
+C 0,116,255
+
+
+1111111
+1000011
+1100S20111
+1111011
+1111011

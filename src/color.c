@@ -25,14 +25,3 @@ int		get_b(int trgb)
 {
 	return (trgb & (0xFF));
 }
-
-
-
-/*int fade_color( int color, double lum )
-{
-	lum = 0.7;
-    int r, g, b;
-    create_trgb(color, &r, &g, &b);
-    return create_trgb(color, (int)(r*lum), (int)(g*lum), (int)(b*lum));
-}
-*/
