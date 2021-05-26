@@ -1,38 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color.c                                            :+:      :+:    :+:   */
+/*   my_math2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dohlee <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/26 11:06:20 by dohlee            #+#    #+#             */
-/*   Updated: 2021/05/26 11:06:38 by dohlee           ###   ########.fr       */
+/*   Created: 2021/05/26 12:34:49 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 12:34:50 by dohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		create_trgb(int t, int r, int g, int b)
+int	max(int a, int b)
 {
-	return (t << 24 | r << 16 | g << 8 | b);
+	if (a > b)
+		return (a);
+	else
+		return (b);
 }
 
-int		get_t(int trgb)
+int	min(int a, int b)
 {
-	return (trgb & (0xFF << 24));
-}
-
-int		get_r(int trgb)
-{
-	return (trgb & (0xFF << 16));
-}
-
-int		get_g(int trgb)
-{
-	return (trgb & (0xFF << 8));
-}
-
-int		get_b(int trgb)
-{
-	return (trgb & (0xFF));
+	if (a > b)
+		return (b);
+	else
+		return (a);
 }

@@ -5,6 +5,13 @@ void init_game(t_game *game)
 {
 	init_mlx(game);
 	macro_init(game);
+	gr_init(&game->graphic);
+	game->moving_forward = 0;
+	game->moving_behind = 0;
+	game->moving_right = 0;
+	game->moving_left = 0;
+	game->turn_right = 0;
+	game->turn_left = 0;
 }
 
 void			init_data(t_game *game)
@@ -21,6 +28,10 @@ void			init_mlx(t_game *game)
 
 void init_map(t_game *game)
 {
+	game->map.resolution_check = 0;
+	game->map.fc_check = 0;
+	game->map.texture_check = 0;
+	game->player.check = 0;
 	game->map.map = NULL;
 	game->map.textures[0] = NULL;
 	game->map.textures[1] = NULL;
@@ -29,8 +40,7 @@ void init_map(t_game *game)
 	game->map.textures[4] = NULL;
 	game->map.floor = 0;
 	game->map.celling = 0;
-	game->sx = game->map.resolution[0];
-	game->sy = game->map.resolution[1];
+	game->map.height = 0;
 }
 
 void gwi_init(t_game *game)
@@ -48,6 +58,19 @@ void gwi_init(t_game *game)
 void macro_init(t_game *game)
 {
 	game->global.fov_h = deg2rad(FOV);
+	game->global.fov_v = global_fov_v(game);
+	game->global.fovh_2 = game->global.fov_h / 2.0;
 	game->global.pixel_per_angle =
 		(game->map.resolution[0] - 1.) / game->global.fov_h;
+	game->global.angle_per_pixel =
+	game->global.fov_h / (game->map.resolution[0] - 1);
+}
+
+void	gr_init(t_graphic *graphic)
+{
+	graphic->wh = 0;
+	graphic->y0 = 0;
+	graphic->y1 = 0;
+	graphic->y_start = 0;
+	graphic->y_end = 0;
 }

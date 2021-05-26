@@ -6,7 +6,7 @@ SRCS =	src/init.c\
 		src/graphic.c\
 		src/key_action.c\
 		src/my_math.c\
-		src/my_math2.c\
+		src/min_max.c\
 		src/my_mlx.c\
 		src/player_action.c\
 		src/wall_find.c\
@@ -20,11 +20,14 @@ SRCS =	src/init.c\
 		src/color.c\
 		src/error.c\
 		src/sprites.c\
-		src/map_check.c
+		src/map_check.c\
+		src/map_setting.c\
+		src/map_utils.c\
+		src/wall_intersection_utils.c
 
 
 NAME = Cub3D
-GCC_FLAG = -g -fsanitize=address  #-g -Wall -Werror -Wextra 
+GCC_FLAG =  -g -Wall -Werror -Wextra # -g -fsanitize=address
 CC = gcc $(GCC_FLAG)
 
 OBJS = $(SRCS:.c=.o)

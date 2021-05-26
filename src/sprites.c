@@ -1,107 +1,123 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sprites.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dohlee <dohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/26 12:42:30 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 14:42:09 by dohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-
-t_sprite	*get_visible_sprites(t_game *game, int *pcnt)
+t_sprite			*get_visible_sprites(t_game *game, int *pcnt)
 {
-	int n;
-	int x;
-	int y;
-	t_sprite *sp;
+	int				n;
+	t_sprite		*sp;
 
 	n = 0;
-	y = 0;
+	game->spu.y = -1;
 	sp = NULL;
-	while (game->map.map[y])
+	while (game->map.map[++game->spu.y])
 	{
-		x = -1;
-		while (game->map.map[y][++x])
+		game->spu.x = -1;
+		while (game->map.map[game->spu.y][++game->spu.x])
 		{
-			if (map_get_cell(x, y, &game->map) != 2)
+			if (map_get_cell(game->spu.x, game->spu.y, &game->map) != 2)
 				continue;
-
 			if (n == 0)
 				sp = (t_sprite*)malloc(sizeof(t_sprite));
 			else
-				sp = (t_sprite*)realloc(sp, sizeof(t_sprite)*(n + 1));
-			sp[n].tex = (map_get_cell(x, y, &game->map) - CELL_WALL) + 5;
-			sp[n].x = x;
-			sp[n].y = y;
-			sp[n].th = atan2((y + 0.5) - (game->player.y),
-				(x + 0.5) - (game->player.x));
-			if (sp[n].th < 0)
-				sp[n].th += _2PI;
-			sp[n].dist = l2dist(game->player.x, game->player.y,
-				x + 0.5, y + 0.5) * cos(game->player.p_sight - sp[n].th);
+				sp = add_sprites(sp, sizeof(t_sprite), n + 1);
+			sprites_in(sp, game, n);
 			n++;
 		}
-		y++;
 	}
-
 	*pcnt = n;
-	game->sp_n = n;
 	return (sp);
 }
 
-
-void	draw_sprites(t_game *game, double *zbuff, int *tex)
+void				sprites_in(t_sprite *sp, t_game *game, int n)
 {
-	int nsp;
-	int i;
-	t_sprite *sp;
+	sp[n].tex = (map_get_cell(game->spu.x,
+				game->spu.y, &game->map) - CELL_WALL) + 5;
+	sp[n].x = game->spu.x;
+	sp[n].y = game->spu.y;
+	sp[n].th = atan2((game->spu.y + 0.5) - (game->player.y),
+			(game->spu.x + 0.5) - (game->player.x));
+	if (sp[n].th < 0)
+		sp[n].th += _2PI;
+	sp[n].dist = l2dist(game->player.x, game->player.y,
+				game->spu.x + 0.5, game->spu.y + 0.5)
+				* cos(game->player.p_sight - sp[n].th);
+}
+
+void				*add_sprites(void *src, int size, int n)
+{
+	void *new_sprite;
+
+	new_sprite = malloc(size * n);
+	ft_memcpy(new_sprite, src, size * (n - 1));
+	free(src);
+	return (new_sprite);
+}
+
+void				draw_sprites(t_game *game, double *zbuff, int *tex)
+{
+	int				nsp;
+	t_sprite		*sp;
 
 	nsp = 0;
 	sp = get_visible_sprites(game, &nsp);
+	game->spu.i = nsp;
 	my_qsort(sp, 0, nsp - 1);
-	i = game->sp_n - 1;
-	while (i >= 0)
+	while (--game->spu.i >= 0)
 	{
-		sp->sh = get_wall_height(game, sp[i].dist);
-		sp->angle = sp[i].th - game->player.p_sight;
-		if (sp->angle > _PI)
-			sp->angle -= _2PI;
-		else if (sp->angle < -_PI)
-			sp->angle += _2PI;
-		sp->cx = (int)((game->global.fovh_2 - sp->angle)
+		game->spu.sh = get_wall_height(game, sp[game->spu.i].dist);
+		game->spu.angle = sp[game->spu.i].th - game->player.p_sight;
+		if (game->spu.angle > _PI)
+			game->spu.angle -= _2PI;
+		else if (game->spu.angle < -_PI)
+			game->spu.angle += _2PI;
+		game->spu.cx = (int)((game->global.fovh_2 - game->spu.angle)
 			* game->global.pixel_per_angle);
-		sp->xmin = max(0, sp->cx - sp->sh / 2);
-		sp->xmax = min(game->map.resolution[0], sp->cx + sp->sh / 2);
-		game->i = i;
+		game->spu.xmin = max(0, game->spu.cx - game->spu.sh / 2);
+		game->spu.xmax = min(game->map.resolution[0],
+						game->spu.cx + game->spu.sh / 2);
 		put_sprite(sp, game, zbuff, tex);
-		i--;
 	}
 	if (nsp > 0)
 		free(sp);
+	free(zbuff);
 }
 
-void	put_sprite(t_sprite *sp, t_game *game, double *zbuff, int *tex)
+void				put_sprite(t_sprite *sp,
+					t_game *game, double *zbuff, int *tex)
 {
-	int x;
-	int y;
-	int i;
-	unsigned int color;
+	int				x;
+	int				y;
+	unsigned int	color;
 
-	i = game->i;
-	x = sp->xmin - 1;
-
-	y = sp->xmax;
-	while (++x < sp->xmax)
+	x = game->spu.xmin - 1;
+	y = game->spu.xmax;
+	while (++x < game->spu.xmax)
 	{
-		if (sp[i].dist > zbuff[x])
+		if (sp[game->spu.i].dist > zbuff[x] || sp[game->spu.i].dist < 0.9)
 			continue;
-		if (sp[i].dist < 0.9)
-			continue;
-		sp->txratio = (double)(x - sp->cx) / sp->sh + 0.5;
-		sp->tx = (int)(sp->txratio * game->tex.width[4]);
-		sp->y0 = (int)((game->map.resolution[1] - sp->sh) / 2.0);
-		y = max(0, sp->y0) - 1;
-		while (++y < min(game->map.resolution[1], sp->y0 + sp->sh))
+		game->spu.txratio = (double)(x - game->spu.cx) / game->spu.sh + 0.5;
+		game->spu.tx = (int)(game->spu.txratio * game->tex.width[4]);
+		game->spu.y0 = (int)((game->map.resolution[1] - game->spu.sh) / 2.0);
+		y = max(0, game->spu.y0) - 1;
+		while (++y < min(game->map.resolution[1], game->spu.y0 + game->spu.sh))
 		{
-			sp->ty = (int)((double)(y - sp->y0) * game->tex.height[4] / sp->sh);
-			color = tex[game->tex.width[4] * sp->ty + sp->tx];
+			game->spu.ty = (int)((double)(y - game->spu.y0)
+			* game->tex.height[4] / game->spu.sh);
+			color = tex[game->tex.width[4] * game->spu.ty + game->spu.tx];
 			if (color == 0xff000000)
 				continue;
 			my_mlx_pixel_put(&game->data, x, y, color);
 		}
 	}
 }
-

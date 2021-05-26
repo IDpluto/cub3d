@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dohlee <dohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/26 13:20:52 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 13:21:17 by dohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 char			**free_all(char **line)
@@ -20,23 +32,22 @@ void			my_qsort(t_sprite *sp, int start, int end)
 
 	if (start < end)
 	{
-		pivot = getPivot(sp, start, end);
+		pivot = getpivot(sp, start, end);
 		my_qsort(sp, start, pivot - 1);
 		my_qsort(sp, pivot + 1, end);
 	}
 }
 
-int				getPivot(t_sprite *sp, int start, int end)
+int				getpivot(t_sprite *sp, int start, int end)
 {
-	int i;
-	int j;
-	t_sprite tmp;
-	double pivot;
+	int			i;
+	int			j;
+	t_sprite	tmp;
+	double		pivot;
 
 	pivot = sp[end].dist;
 	i = start - 1;
 	j = start;
-
 	while (j < end)
 	{
 		if (sp[j].dist <= pivot)

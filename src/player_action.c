@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player_action.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dohlee <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/26 12:42:08 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 12:42:09 by dohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	player_rotate(t_game *game)
@@ -9,39 +21,49 @@ void	player_rotate(t_game *game)
 		game->player.p_sight -= _2PI;
 }
 
-int		player_move(t_game *game, int keycode, double amt)
+int		player_move(t_game *game, int keycode)
 {
 	double d_x;
 	double d_y;
-	double n_x;
-	double n_y;
 
-	d_x = 0;
-	d_y = 0;
-	if (get_move_offset(game->player.p_sight, keycode, amt, &d_x, &d_y) < 0)
+	d_x = game->player.x;
+	d_y = game->player.y;
+	if (get_move_offset(game, keycode, &game->player.x, &game->player.y) < 0)
 		return (-1);
-	n_x = game->player.x + d_x;
-	n_y = game->player.y + d_y;
-	if (map_get_cell((int)n_x, (int)n_y, &game->map) == 1)
+	if (map_get_cell((int)game->player.x, (int)game->player.y, &game->map) == 1)
+	{
+		game->player.x = d_x;
+		game->player.y = d_y;
 		return (-1);
-	game->player.x = n_x;
-	game->player.y = n_y;
+	}
 	return (0);
 }
 
-int		get_move_offset(double th, int keycode, double amt, double *pdx, double *pdy)
+int		get_move_offset(t_game *game, int keycode, double *pdx, double *pdy)
 {
-	if (keycode == KEY_W || keycode == KEY_S)
+	double th;
+
+	keycode = 0;
+	th = game->player.p_sight;
+	if (game->moving_forward)
 	{
-		*pdx = key_direction(keycode, KEY_W) * amt * cos(th);
-		*pdy = key_direction(keycode, KEY_W) * amt * sin(th);
+		*pdx += 1 * MOVE_UNIT * cos(th);
+		*pdy += 1 * MOVE_UNIT * sin(th);
 	}
-	else if (keycode == KEY_A || keycode == KEY_D)
+	if (game->moving_behind)
 	{
-		*pdx = amt * cos(th + key_direction(keycode, KEY_A) * M_PI_2);
-		*pdy = amt * sin(th + key_direction(keycode, KEY_A) * M_PI_2);
+		*pdx += -1 * MOVE_UNIT * cos(th);
+		*pdy += -1 * MOVE_UNIT * sin(th);
 	}
-	else
-		return (-1);
+	if (game->moving_left)
+	{
+		*pdx += MOVE_UNIT * cos(th + 1 * _PI_2);
+		*pdy += MOVE_UNIT * sin(th + 1 * _PI_2);
+	}
+	if (game->moving_right)
+	{
+		*pdx += MOVE_UNIT * cos(th + -1 * _PI_2);
+		*pdy += MOVE_UNIT * sin(th + -1 * _PI_2);
+	}
 	return (0);
 }

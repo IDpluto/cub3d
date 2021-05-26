@@ -1,22 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wall_find.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dohlee <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/26 13:21:34 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 13:21:35 by dohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 double			cast_single_ray(t_game *g)
 {
-	g->global.angle_per_pixel = g->global.fov_h / (g->map.resolution[0] - 1.);
-	g->global.fovh_2 = g->global.fov_h / 2.0;
 	g->laser.ray = (g->player.p_sight + g->global.fovh_2)
 				- (g->laser.x * g->global.angle_per_pixel);
 	if (get_wall_intersection(g) == false)
 		return (INFINITY);
 	g->laser.wdist = l2dist(g->player.x, g->player.y,
 					g->laser.w_x, g->laser.w_y);
-	g->laser.wdist *= cos(g->player.p_sight - g->laser.ray);
+	g->laser.wdist *= cos(g->laser.ray - g->player.p_sight);
 	return (g->laser.wdist);
 }
 
-e_bool			get_wall_intersection(t_game *g)
+t_bool			get_wall_intersection(t_game *g)
 {
-	e_bool hit;
+	t_bool hit;
 
 	hit = false;
 	gwi_init(g);

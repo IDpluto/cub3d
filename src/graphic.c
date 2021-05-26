@@ -1,11 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   graphic.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dohlee <dohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/26 11:09:41 by dohlee            #+#    #+#             */
+/*   Updated: 2021/05/26 14:42:29 by dohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int			get_wall_height(t_game *g, double dist)
-{
-	g->global.fov_v = global_fov_v(g);
-	g->graphic.fov_h = 2.0 * dist * tan(g->global.fov_v / 2.0);
-	return ((int)(g->map.resolution[1] * (WALL_H / g->graphic.fov_h)));
-}
+#include "cub3d.h"
 
 void		draw_wall(t_game *g)
 {
@@ -88,7 +93,8 @@ void		render(t_game *g)
 	draw_sprites(g, zbuff, g->tex.tex[S]);
 	mlx_put_image_to_window(g->data.mlx, g->data.mlx_win, g->data.img, 0, 0);
 	mlx_destroy_image(g->data.mlx, g->data.img);
-	g->data.img = mlx_new_image(g->data.mlx, g->map.resolution[0], g->map.resolution[1]);
+	g->data.img = mlx_new_image(g->data.mlx,
+		g->map.resolution[0], g->map.resolution[1]);
 	g->data.addr = (int*)mlx_get_data_addr(g->data.img, &g->data.bits_per_pixel,
 					&g->data.line_length, &g->data.endian);
 }
